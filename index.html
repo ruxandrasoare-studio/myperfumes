@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Layer: perfume pairing</title>
+<meta name="theme-color" content="#EEEAF2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B1521" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Layer">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEEAF2;--surface:#F8F6FA;--ink:#241A2E;--muted:#6B6175;--line:#D8D1E0;--accent:#5B3A72;--accent-ink:#fff;--glass:#ffffff;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1B1521;--surface:#251D2C;--ink:#EFE9F4;--muted:#A79DB3;--line:#3A3044;--accent:#C7A4E0;--accent-ink:#1B1521;--glass:#33293C}}
+:root[data-theme="dark"]{--bg:#1B1521;--surface:#251D2C;--ink:#EFE9F4;--muted:#A79DB3;--line:#3A3044;--accent:#C7A4E0;--accent-ink:#1B1521;--glass:#33293C}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px 48px}
+header{padding:28px 0 8px}
+h1{font:500 3rem/1 var(--serif);margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:6px 0 0;font-size:.95rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding:14px 0 12px;border-bottom:1px solid var(--line);margin-bottom:20px}
+nav button{flex:1;font:500 .95rem var(--sans);color:var(--muted);background:none;border:0;padding:10px 0;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a.btn{display:inline-block;text-decoration:none}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:12px 20px;font-weight:600;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+label{display:block;font-size:.85rem;color:var(--muted);margin:0 0 6px}
+input[type=text],select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+textarea{min-height:80px;resize:vertical}
+.field{margin-bottom:14px}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+h2{font:500 1.9rem/1.1 var(--serif);margin:0 0 4px}
+.hint{color:var(--muted);font-size:.9rem;margin:0 0 18px}
+section[hidden]{display:none}
+.list{list-style:none;margin:0;padding:0}
+.item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.dot{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.item .meta{flex:1;min-width:0}
+.item .name{font:600 1.2rem/1.2 var(--serif)}
+.item .small{color:var(--muted);font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.x{background:none;border:0;color:var(--muted);font-size:1.3rem;padding:4px 8px;cursor:pointer;border-radius:8px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;background:var(--surface);border:0;padding:11px 0;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+details{border:1px solid var(--line);border-radius:16px;padding:4px 16px;margin-bottom:20px;background:var(--surface)}
+summary{cursor:pointer;padding:12px 0;font-weight:600}
+.catalog{max-height:260px;overflow:auto;margin:8px 0 12px}
+.cat{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 2px;cursor:pointer}
+.cat span.n{flex:1}
+.cat .add{color:var(--accent);font-weight:600;font-size:.85rem}
+.empty{color:var(--muted);text-align:center;padding:32px 12px;border:1px dashed var(--line);border-radius:16px}
+.result{margin-top:24px;display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:start}
+@media (max-width:420px){.result{grid-template-columns:96px 1fr;gap:16px}}
+.vial{width:100%;height:auto}
+.liquid{transform-origin:60px 190px;animation:rise .9s cubic-bezier(.2,.7,.2,1)}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.liquid{animation:none}}
+.score{font:500 4rem/.9 var(--serif)}
+.score small{font-size:1.2rem;color:var(--muted)}
+.verdict{font-weight:600;margin:6px 0 14px}
+.result h3{font:600 1rem var(--sans);margin:18px 0 6px}
+.result p,.result li{margin:0 0 8px;font-size:.95rem}
+.result ul{padding-left:18px;margin:0}
+.full{grid-column:1/-1}
+.ai{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;font-size:.95rem}
+.ai:empty{display:none}
+.pair{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:14px 0;text-align:left;cursor:pointer}
+.pair .p{flex:1;min-width:0}
+.pair .p strong{font:600 1.1rem/1.25 var(--serif);display:block}
+.pair .p span{font-size:.85rem;color:var(--muted)}
+.pair .s{font:500 1.8rem var(--serif)}
+.note{font-size:.85rem;color:var(--muted);margin-top:10px}
+.swatches{display:flex;gap:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Layer</h1>
+    <p class="sub">Find which perfumes on your shelf belong together, and how to wear them.</p>
+  </header>
+  <nav role="tablist">
+    <button role="tab" data-tab="shelf" aria-selected="true">Shelf</button>
+    <button role="tab" data-tab="layer" aria-selected="false">Pair</button>
+    <button role="tab" data-tab="ideas" aria-selected="false">Ideas</button>
+  </nav>
+
+  <section id="shelf">
+    <details id="quick">
+      <summary>Add from popular perfumes</summary>
+      <input type="text" id="catSearch" placeholder="Search by name or brand" aria-label="Search popular perfumes">
+      <div class="catalog" id="catalog"></div>
+    </details>
+    <details id="custom">
+      <summary>Add your own (with Fragrantica)</summary>
+      <div class="row">
+        <div class="field"><label for="fName">Name</label><input type="text" id="fName" placeholder="Santal 33"></div>
+        <div class="field"><label for="fBrand">Brand</label><input type="text" id="fBrand" placeholder="Le Labo"></div>
+      </div>
+      <div class="import">
+        <p class="note" style="margin:0 0 10px">On the Fragrantica page, select from "main accords" down to the base notes, copy, and paste it below.</p>
+        <p style="margin:0 0 12px"><a class="btn ghost" id="fragLink" href="https://www.fragrantica.com" target="_blank" rel="noopener">Find on Fragrantica</a></p>
+        <div class="field"><label for="fPaste">Pasted Fragrantica text</label><textarea id="fPaste" placeholder="main accords&#10;woody&#10;aromatic&#10;…&#10;Top Notes&#10;Cardamom, Violet&#10;Middle Notes …"></textarea></div>
+        <p style="margin:0 0 6px"><button class="btn ghost" id="parseBtn" type="button">Fill in from pasted text</button></p>
+        <p class="note" id="parseMsg" aria-live="polite" style="margin:0 0 18px"></p>
+      </div>
+      <div class="field"><label for="fFam">Main family</label><select id="fFam"></select></div>
+      <div class="field"><label for="fNotes">Key notes, separated by commas</label><input type="text" id="fNotes" placeholder="sandalwood, cardamom, iris"></div>
+      <div class="field"><label>Strength</label>
+        <div class="seg" id="fInt"><button type="button" data-v="light" aria-pressed="false">Light</button><button type="button" data-v="medium" aria-pressed="true">Medium</button><button type="button" data-v="heavy" aria-pressed="false">Heavy</button></div>
+      </div>
+      <p><button class="btn" id="addBtn" type="button">Add to shelf</button></p>
+    </details>
+    <ul class="list" id="shelfList"></ul>
+    <details id="settings" style="margin-top:28px">
+      <summary>Settings and backup</summary>
+      <p class="note" style="margin-top:0">Your shelf is stored only on this device. Export a backup before clearing your browser data or switching phones.</p>
+      <div class="row" style="margin-bottom:16px"><button class="btn ghost" id="exportBtn" type="button">Export backup</button>
+        <button class="btn ghost" id="importBtn" type="button">Import backup</button></div>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <div class="field"><label for="apiKey">Anthropic API key (optional, enables Claude suggestions)</label>
+        <input type="text" id="apiKey" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"></div>
+      <p class="note">Stored only in this browser and sent only to Anthropic. Use a key with a low spending limit.</p>
+      <p><button class="btn" id="saveKey" type="button">Save key</button></p>
+    </details>
+  </section>
+
+  <section id="layer" hidden>
+    <h2>Pair two perfumes</h2>
+    <p class="hint">The heavier scent goes on first; the vial shows the order and the ratio.</p>
+    <div class="row">
+      <div class="field"><label for="pA">First</label><select id="pA"></select></div>
+      <div class="field"><label for="pB">Second</label><select id="pB"></select></div>
+    </div>
+    <div id="result"></div>
+  </section>
+
+  <section id="ideas" hidden>
+    <h2>Best pairs on your shelf</h2>
+    <p class="hint">Ranked by family harmony, shared notes and weight contrast. Tap one to see how to wear it.</p>
+    <div id="topPairs"></div>
+    <div id="aiIdeas" style="margin-top:32px">
+      <h2>Layer for a moment</h2>
+      <p class="hint">Describe the occasion or mood and Claude picks combinations from your shelf.</p>
+      <div class="field"><textarea id="mood" placeholder="First date, autumn evening, want something warm but not too sweet"></textarea></div>
+      <button class="btn" id="ideasBtn" type="button">Suggest combinations</button>
+      <div class="ai" id="ideasOut" aria-live="polite"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const FAM={
+  citrus:{label:"Citrus",c:"#E3B93C",w:1},fresh:{label:"Fresh / aquatic",c:"#8EC5D6",w:1},
+  aromatic:{label:"Aromatic / herbal",c:"#6F9C8E",w:2},green:{label:"Green",c:"#8FAF6B",w:2},
+  fruity:{label:"Fruity",c:"#E5737A",w:2},floral:{label:"Floral",c:"#D98BB0",w:3},
+  spicy:{label:"Spicy",c:"#A8432F",w:3},musky:{label:"Musky / skin",c:"#C9B9D8",w:3},
+  woody:{label:"Woody",c:"#7A5C3E",w:4},gourmand:{label:"Gourmand / sweet",c:"#B07A4F",w:4},
+  leather:{label:"Leather / smoky",c:"#4E3B31",w:5},amber:{label:"Amber / resin",c:"#C98A2E",w:5}
+};
+const RAW={
+ citrus:{citrus:3,fresh:4,green:4,floral:4,fruity:3,gourmand:2,woody:5,amber:3,spicy:3,musky:4,leather:2,aromatic:5},
+ fresh:{fresh:3,green:4,floral:3,fruity:3,gourmand:1,woody:4,amber:2,spicy:2,musky:5,leather:1,aromatic:4},
+ green:{green:3,floral:4,fruity:3,gourmand:1,woody:4,amber:2,spicy:3,musky:4,leather:3,aromatic:4},
+ floral:{floral:3,fruity:4,gourmand:4,woody:4,amber:5,spicy:3,musky:5,leather:3,aromatic:2},
+ fruity:{fruity:3,gourmand:4,woody:3,amber:3,spicy:2,musky:4,leather:2,aromatic:2},
+ gourmand:{gourmand:3,woody:4,amber:5,spicy:4,musky:4,leather:3,aromatic:1},
+ woody:{woody:3,amber:5,spicy:5,musky:4,leather:4,aromatic:4},
+ amber:{amber:3,spicy:5,musky:4,leather:4,aromatic:2},
+ spicy:{spicy:3,musky:3,leather:4,aromatic:3},
+ musky:{musky:4,leather:3,aromatic:3},
+ leather:{leather:2,aromatic:3},aromatic:{aromatic:3}
+};
+const harm=(a,b)=>(RAW[a]&&RAW[a][b])||(RAW[b]&&RAW[b][a])||3;
+const WHY={
+ "amber|woody":"Resins and woods are the backbone of classic orientals: the woods give the amber structure so it doesn't turn syrupy.",
+ "spicy|woody":"Spice lifts woods off the skin while woods ground the spice. A textbook pairing.",
+ "amber|floral":"Amber gives florals depth and warmth. This is the classic floriental structure.",
+ "floral|musky":"Musk works like a soft-focus filter on florals, making them read as skin rather than bouquet.",
+ "aromatic|citrus":"The original cologne formula: herbs and citrus have been paired for three centuries.",
+ "citrus|woody":"Citrus brightens a woody opening, and the woods extend citrus, which normally fades within an hour.",
+ "amber|gourmand":"Both warm and sweet. Rich and long-lasting, but it can turn cloying, so keep the sweeter one light.",
+ "amber|spicy":"Spice and resin is an old pairing: dense, warm, and very long-lasting.",
+ "fresh|musky":"Clean musks anchor airy, aquatic scents that otherwise vanish quickly.",
+ "aromatic|gourmand":"Herbal freshness and dessert sweetness pull in opposite directions.",
+ "fresh|gourmand":"Ozonic or marine notes and sugar tend to read as synthetic together.",
+ "fresh|leather":"Ozone and leather rarely share a mood; one usually cancels the other.",
+ "green|gourmand":"Sharp greens and sweet notes often clash unless a wood or musk bridges them."
+};
+const GENERIC={5:"A classic family pairing that perfumers use inside single fragrances.",4:"These families share enough tone to blend smoothly while still adding contrast.",3:"A neutral pairing: success depends on the specific notes more than the families.",2:"Different moods. This works only if one of them stays in the background.",1:"These families tend to fight on skin."};
+const CATALOG=[
+ ["Wood Sage & Sea Salt","Jo Malone","aromatic","ambrette, sea salt, sage, grapefruit","light"],
+ ["English Pear & Freesia","Jo Malone","fruity","pear, freesia, patchouli, rose","light"],
+ ["Santal 33","Le Labo","woody","sandalwood, cardamom, iris, leather, cedar","medium"],
+ ["Another 13","Le Labo","musky","ambroxan, musk, pear, moss","light"],
+ ["Gypsy Water","Byredo","woody","bergamot, juniper, pine, vanilla, sandalwood","medium"],
+ ["Bal d'Afrique","Byredo","woody","bergamot, marigold, violet, vetiver, musk","medium"],
+ ["Jazz Club","Maison Margiela Replica","gourmand","rum, tobacco, vanilla, pink pepper","medium"],
+ ["By the Fireplace","Maison Margiela Replica","woody","chestnut, smoke, vanilla, cloves","medium"],
+ ["Baccarat Rouge 540","Maison Francis Kurkdjian","amber","saffron, jasmine, ambergris, cedar","heavy"],
+ ["Black Orchid","Tom Ford","amber","truffle, orchid, patchouli, chocolate, vanilla","heavy"],
+ ["Tobacco Vanille","Tom Ford","spicy","tobacco, vanilla, cacao, tonka, spices","heavy"],
+ ["Coco Mademoiselle","Chanel","floral","orange, rose, jasmine, patchouli, vanilla","medium"],
+ ["Black Opium","YSL","gourmand","coffee, vanilla, jasmine, pink pepper","heavy"],
+ ["Sauvage","Dior","aromatic","bergamot, pepper, lavender, ambroxan","medium"],
+ ["Philosykos","Diptyque","green","fig leaf, fig, coconut, cedar","light"],
+ ["Molecule 01","Escentric Molecules","musky","iso e super","light"],
+ ["Colonia","Acqua di Parma","citrus","lemon, bergamot, lavender, rose, vetiver","light"],
+ ["Vanilla 28","Kayali","gourmand","vanilla, brown sugar, tonka, amber","heavy"],
+ ["Glossier You","Glossier","musky","ambrette, iris, pink pepper, musk","light"],
+ ["Narciso Rodriguez For Her","Narciso Rodriguez","musky","musk, rose, peach, patchouli","medium"],
+ ["Cloud","Ariana Grande","gourmand","lavender, praline, coconut, musk","medium"],
+ ["Neroli Portofino","Tom Ford","citrus","neroli, bergamot, lemon, amber","light"],
+ ["Rose 31","Le Labo","floral","rose, cumin, cedar, oud","medium"],
+ ["Mojave Ghost","Byredo","woody","ambrette, magnolia, sandalwood, musk","light"]
+];
+
+const $=s=>document.querySelector(s);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let shelf=[];const LS="layer-shelf-v1",KEY="layer-api-key";
+const MODEL="claude-sonnet-5-5";
+
+/* ---------- storage: on-device only ---------- */
+try{const v=localStorage.getItem(LS);if(v)shelf=JSON.parse(v)||[]}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(shelf))}catch(e){}}
+const getKey=()=>{try{return localStorage.getItem(KEY)||""}catch(e){return ""}};
+
+/* ---------- AI: optional, uses your own Anthropic API key ---------- */
+let sample=getKey()?callClaude:null;
+async function callClaude(prompt){
+  if(!navigator.onLine)throw {code:"offline"};
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{
+    "content-type":"application/json","x-api-key":getKey(),"anthropic-version":"2023-06-01",
+    "anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:MODEL,max_tokens:600,messages:[{role:"user",content:prompt}]})});
+  if(!r.ok)throw {code:r.status===401?"bad_key":r.status===429?"rate_limited":"error"};
+  const d=await r.json();
+  return {text:d.content.filter(c=>c.type==="text").map(c=>c.text).join("\n")};
+}
+
+/* ---------- scoring ---------- */
+const weight=p=>FAM[p.fam].w+(p.intensity==="heavy"?1:p.intensity==="light"?-1:0);
+function scorePair(a,b){
+  const h=harm(a.fam,b.fam);
+  const na=a.notes.map(n=>n.toLowerCase()),nb=b.notes.map(n=>n.toLowerCase());
+  const shared=na.filter(n=>nb.some(m=>m===n||m.includes(n)||n.includes(m)));
+  const wa=weight(a),wb=weight(b);
+  const bothHeavy=wa>=5&&wb>=5;const gap=Math.abs(wa-wb);
+  let s=h*16+Math.min(shared.length,3)*5+(gap>=2?5:0)-(bothHeavy?15:0);
+  s=Math.max(5,Math.min(98,s));
+  const [base,top]=wa>=wb?[a,b]:[b,a];
+  const reasons=[];
+  if(a.fam===b.fam)reasons.push("Same family, so layering amplifies their shared character rather than creating something new.");
+  else reasons.push(WHY[[a.fam,b.fam].sort().join("|")]||GENERIC[h]);
+  if(shared.length)reasons.push("Shared notes ("+shared.slice(0,3).join(", ")+") act as a bridge between the two.");
+  if(gap>=2)reasons.push("Good weight contrast: "+base.name+" anchors and "+top.name+" sits on top.");
+  if(bothHeavy)reasons.push("Both are heavy hitters and will compete for projection. Keep it to one spray each.");
+  const verdict=s>=80?"Natural pair":s>=60?"Worth testing":s>=40?"Risky, try one spray first":"Likely clash";
+  const ratio=bothHeavy?[1,1]:gap>=2?[1,2]:[1,1];
+  return {s,verdict,shared,base,top,reasons,ratio,bothHeavy};
+}
+
+/* ---------- vial ---------- */
+function vial(base,top,ratio){
+  const total=ratio[0]+ratio[1];const H=118;const hb=Math.round(H*ratio[0]/total);const ht=H-hb;
+  const y0=190;
+  return `<svg class="vial" viewBox="0 0 120 200" role="img" aria-label="${esc(base.name)} as the base layer, ${esc(top.name)} on top">
+  <defs><clipPath id="body"><path d="M28 62 Q22 64 22 74 V182 Q22 192 32 192 H88 Q98 192 98 182 V74 Q98 64 92 62 Z"/></clipPath>
+  <linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".25" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient></defs>
+  <rect x="44" y="10" width="32" height="26" rx="4" fill="var(--ink)"/>
+  <rect x="48" y="36" width="24" height="26" fill="var(--glass)" stroke="var(--line)"/>
+  <path d="M28 62 Q22 64 22 74 V182 Q22 192 32 192 H88 Q98 192 98 182 V74 Q98 64 92 62 Z" fill="var(--glass)" stroke="var(--line)" stroke-width="1.5"/>
+  <g clip-path="url(#body)"><g class="liquid">
+    <rect x="20" y="${y0-hb+2}" width="80" height="${hb}" fill="${FAM[base.fam].c}"/>
+    <rect x="20" y="${y0-hb-ht+2}" width="80" height="${ht}" fill="${FAM[top.fam].c}" opacity=".88"/>
+    <rect x="20" y="${y0-hb}" width="80" height="2" fill="#fff" opacity=".35"/>
+  </g><rect x="20" y="60" width="80" height="140" fill="url(#shine)"/></g>
+  </svg>`;
+}
+
+/* ---------- render ---------- */
+function opt(sel,keep){
+  const v=keep??sel.value;
+  sel.innerHTML=shelf.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+  if(shelf.some(p=>p.id===v))sel.value=v;
+}
+function renderShelf(){
+  const ul=$("#shelfList");
+  if(!shelf.length){ul.innerHTML=`<li class="empty">Your shelf is empty. Add at least two perfumes to start pairing.</li>`;return}
+  ul.innerHTML=shelf.map(p=>`<li class="item"><span class="dot" style="background:${FAM[p.fam].c}"></span>
+   <div class="meta"><div class="name">${esc(p.name)}</div><div class="small">${esc(p.brand||"")}${p.brand?", ":""}${FAM[p.fam].label.toLowerCase()}, ${p.intensity}. ${esc(p.notes.join(", "))}</div></div>
+   <button class="x" data-del="${p.id}" aria-label="Remove ${esc(p.name)}">×</button></li>`).join("");
+}
+function renderCatalog(){
+  const q=$("#catSearch").value.trim().toLowerCase();
+  const have=new Set(shelf.map(p=>(p.name+p.brand).toLowerCase()));
+  const rows=CATALOG.filter(c=>!have.has((c[0]+c[1]).toLowerCase())&&(!q||(c[0]+" "+c[1]).toLowerCase().includes(q)));
+  $("#catalog").innerHTML=rows.length?rows.map((c,i)=>`<button class="cat" type="button" data-cat="${CATALOG.indexOf(c)}"><span class="dot" style="background:${FAM[c[2]].c}"></span><span class="n">${esc(c[0])} <span style="color:var(--muted)">${esc(c[1])}</span></span><span class="add">Add</span></button>`).join(""):`<p class="note">No match. Use "Add your own" below.</p>`;
+}
+function renderPair(){
+  const r=$("#result");
+  if(shelf.length<2){r.innerHTML=`<div class="empty">Add at least two perfumes to your shelf first.</div>`;return}
+  const a=shelf.find(p=>p.id===$("#pA").value),b=shelf.find(p=>p.id===$("#pB").value);
+  if(!a||!b)return;
+  if(a.id===b.id){r.innerHTML=`<div class="empty">Pick two different perfumes.</div>`;return}
+  const x=scorePair(a,b);
+  const sprays=x.bothHeavy?`1 spray of each. If they fight, split them: ${esc(x.base.name)} on the chest, ${esc(x.top.name)} on the wrists.`:`${x.ratio[0]} spray of ${esc(x.base.name)} on pulse points, let it settle for a minute, then ${x.ratio[1]} spray${x.ratio[1]>1?"s":""} of ${esc(x.top.name)} over the same spots.`;
+  r.innerHTML=`<div class="result">
+   <div>${vial(x.base,x.top,x.ratio)}</div>
+   <div><div class="score">${x.s}<small>/100</small></div><div class="verdict">${x.verdict}</div>
+     <div class="swatches"><span class="dot" style="background:${FAM[x.base.fam].c}"></span><span class="dot" style="background:${FAM[x.top.fam].c}"></span></div>
+   </div>
+   <div class="full"><h3>Why</h3>${x.reasons.map(t=>`<p>${esc(t)}</p>`).join("")}
+   <h3>How to wear it</h3><p>${sprays}</p><p style="color:var(--muted)">Don't rub your wrists together; it crushes the top notes of the second layer.</p>
+   ${sample?`<p style="margin-top:18px"><button class="btn ghost" id="pairAi" type="button">Get a perfumer's take from Claude</button></p><div class="ai" id="pairOut" aria-live="polite"></div>`:""}
+   </div></div>`;
+}
+function renderIdeas(){
+  const el=$("#topPairs");
+  if(shelf.length<2){el.innerHTML=`<div class="empty">Add at least two perfumes to see ranked pairs.</div>`}
+  else{
+    const pairs=[];for(let i=0;i<shelf.length;i++)for(let j=i+1;j<shelf.length;j++)pairs.push(scorePair(shelf[i],shelf[j]));
+    pairs.sort((p,q)=>q.s-p.s);
+    el.innerHTML=pairs.slice(0,6).map(p=>`<button class="pair" type="button" data-a="${p.base.id}" data-b="${p.top.id}">
+      <span class="swatches"><span class="dot" style="background:${FAM[p.base.fam].c}"></span><span class="dot" style="background:${FAM[p.top.fam].c}"></span></span>
+      <span class="p"><strong>${esc(p.base.name)} + ${esc(p.top.name)}</strong><span>${p.verdict}</span></span><span class="s">${p.s}</span></button>`).join("");
+  }
+  $("#aiIdeas").hidden=!sample;
+  $("#ideasBtn").disabled=shelf.length<2;
+}
+function renderAll(){renderShelf();renderCatalog();opt($("#pA"));opt($("#pB"));
+  if(shelf.length>=2&&$("#pA").value===$("#pB").value)$("#pB").value=shelf[1].id;
+  renderPair();renderIdeas();}
+
+/* ---------- AI ---------- */
+const desc=p=>`${p.name}${p.brand?" by "+p.brand:""} (${FAM[p.fam].label}, ${p.intensity}; notes: ${p.notes.join(", ")})`;
+async function ask(prompt,out,btn){
+  out.textContent="Thinking…";btn.disabled=true;
+  try{
+    const res=await sample(prompt);
+    out.textContent=res.text;
+  }catch(e){
+    const c=e&&e.code;
+    out.textContent=c==="offline"?"You're offline. Claude suggestions need a connection; the scores above still work."
+      :c==="bad_key"?"Your API key was rejected. Check it in Settings on the Shelf tab."
+      :c==="rate_limited"?"Too many requests. Wait a minute and try again."
+      :"Couldn't reach Claude. Try again.";
+  }finally{btn.disabled=false}
+}
+
+/* ---------- events ---------- */
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
+function show(t){document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  ["shelf","layer","ideas"].forEach(id=>$("#"+id).hidden=id!==t);window.scrollTo({top:0});}
+$("#fFam").innerHTML=Object.entries(FAM).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
+let intensity="medium";
+$("#fInt").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;intensity=b.dataset.v;
+  $("#fInt").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("#addBtn").addEventListener("click",()=>{
+  const name=$("#fName").value.trim();if(!name){$("#fName").focus();return}
+  shelf.unshift({id:uid(),name,brand:$("#fBrand").value.trim(),fam:$("#fFam").value,notes:$("#fNotes").value.split(",").map(s=>s.trim()).filter(Boolean),intensity});
+  $("#fName").value=$("#fBrand").value=$("#fNotes").value="";save();renderAll();
+});
+$("#catSearch").addEventListener("input",renderCatalog);
+$("#catalog").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=CATALOG[+b.dataset.cat];
+  shelf.unshift({id:uid(),name:c[0],brand:c[1],fam:c[2],notes:c[3].split(", "),intensity:c[4]});save();renderAll();});
+$("#shelfList").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;shelf=shelf.filter(p=>p.id!==b.dataset.del);save();renderAll();});
+$("#pA").addEventListener("change",renderPair);$("#pB").addEventListener("change",renderPair);
+$("#topPairs").addEventListener("click",e=>{const b=e.target.closest(".pair");if(!b)return;$("#pA").value=b.dataset.a;$("#pB").value=b.dataset.b;renderPair();show("layer");});
+$("#result").addEventListener("click",e=>{
+  if(e.target.id!=="pairAi")return;
+  const a=shelf.find(p=>p.id===$("#pA").value),b=shelf.find(p=>p.id===$("#pB").value);const x=scorePair(a,b);
+  ask(`You are a senior perfumer advising someone on layering two fragrances.
+A: ${desc(a)}
+B: ${desc(b)}
+A rule-based tool scored this pair ${x.s}/100 ("${x.verdict}").
+Answer in three short parts: 1) Will it work and what will it smell like, citing specific notes. 2) Exact application: which first, how many sprays, where. 3) If another fragrance on their shelf would pair better with either one, name it and why. Their shelf: ${shelf.map(p=>p.name).join("; ")}.
+Plain text, no markdown or asterisks, under 140 words.`,$("#pairOut"),e.target);
+});
+$("#ideasBtn").addEventListener("click",()=>{
+  const m=$("#mood").value.trim()||"everyday wear";
+  ask(`You are a senior perfumer. Suggest 3 layering combinations for this occasion or mood: "${m}".
+Use ONLY these fragrances from the person's shelf:
+${shelf.map(desc).join("\n")}
+For each combination: the two fragrance names (a third only if clearly justified), which goes on first and how many sprays of each, and one sentence on why it fits the occasion. If the shelf can't cover the mood well, say what kind of fragrance is missing.
+Plain text, no markdown or asterisks, under 180 words.`,$("#ideasOut"),$("#ideasBtn"));
+});
+/* ---------- Fragrantica paste import ---------- */
+const ACCORD=[
+ ["fresh spicy","spicy"],["warm spicy","spicy"],["soft spicy","spicy"],["white floral","floral"],["yellow floral","floral"],
+ ["citrus","citrus"],["aquatic","fresh"],["marine","fresh"],["ozonic","fresh"],["salty","fresh"],["mineral","fresh"],["fresh","fresh"],
+ ["aromatic","aromatic"],["lavender","aromatic"],["herbal","aromatic"],["green","green"],["fruity","fruity"],["tropical","fruity"],
+ ["rose","floral"],["floral","floral"],["tuberose","floral"],["violet","floral"],["iris","floral"],["powdery","musky"],["musky","musky"],["animalic","musky"],
+ ["vanilla","gourmand"],["sweet","gourmand"],["caramel","gourmand"],["chocolate","gourmand"],["coffee","gourmand"],["honey","gourmand"],["almond","gourmand"],["nutty","gourmand"],["lactonic","gourmand"],["coconut","gourmand"],
+ ["woody","woody"],["earthy","woody"],["patchouli","woody"],["mossy","woody"],["amber","amber"],["balsamic","amber"],["oud","leather"],["leather","leather"],["smoky","leather"],["tobacco","spicy"],["spicy","spicy"]
+];
+const NOTE_FAM=[["bergamot|lemon|orange|grapefruit|mandarin|lime|neroli|yuzu","citrus"],["sea|marine|aquatic|ozon|salt","fresh"],
+ ["lavender|sage|rosemary|basil|mint|thyme","aromatic"],["fig leaf|galbanum|grass|tea|leaf","green"],["pear|apple|peach|berry|cherry|plum|lychee|pineapple","fruity"],
+ ["rose|jasmine|tuberose|iris|violet|freesia|peony|lily|orchid|magnolia|ylang","floral"],["vanilla|caramel|praline|chocolate|coffee|sugar|tonka|honey|almond","gourmand"],
+ ["sandalwood|cedar|vetiver|patchouli|oak|wood|guaiac","woody"],["amber|labdanum|benzoin|myrrh|frankincense|incense|resin","amber"],
+ ["pepper|cardamom|saffron|cinnamon|clove|nutmeg|ginger|tobacco","spicy"],["musk|ambrette|ambroxan|iso e super","musky"],["leather|oud|smoke|birch","leather"]];
+const STOP=/^(perfume rating|rating|longevity|sillage|gender|price value|when to wear|reviews?|votes?|pros|cons|images|news|add your|i have it|i had it|i want it|signature|similar|reminds me of|this perfume reminds|perfumers?|nose|the noses?|launched|.* was launched)/i;
+function parseFrag(txt){
+  const desc=txt.match(/is an? ([a-z ]{3,40}?) fragrance/i);
+  txt=txt.replace(/\r/g,"").replace(/\b(top|middle|heart|base) notes? (?:are|is)\s*/gi,"\n$1 notes\n").replace(/;|\.\s+(?=[A-Z])/g,"\n");
+  const lines=txt.split(/\n|•/).map(s=>s.trim()).filter(Boolean);
+  let mode=null;const accords=[];const notes={top:[],mid:[],base:[],flat:[]};
+  const push=s=>s.split(/,|;| and /).map(x=>x.trim().replace(/\.$/,"")).filter(x=>x&&x.length<35&&!/\d/.test(x)).forEach(x=>notes[mode].push(x.toLowerCase()));
+  for(const raw of lines){
+    const l=raw.toLowerCase();
+    if(/main accords?/.test(l)){mode="acc";continue}
+    const m=l.match(/^(top|middle|heart|base|fragrance)\s+notes?\s*:?\s*(.*)$/);
+    if(m){mode=m[1]==="top"?"top":m[1]==="base"?"base":m[1]==="fragrance"?"flat":"mid";if(m[2])push(raw.slice(raw.length-m[2].length));continue}
+    if(/perfume pyramid/.test(l)){mode=null;continue}
+    if(STOP.test(l)){mode=null;continue}
+    if(mode==="acc"){if(l.length<25&&!/\d/.test(l))accords.push(l);continue}
+    if(mode)push(raw);
+  }
+  if(desc&&!accords.length)accords.push(...desc[1].toLowerCase().split(" "));
+  let fam=null;
+  for(const a of accords){for(const [k,f] of ACCORD)if(a.includes(k)){fam=f;break}if(fam)break}
+  const uniq=[...new Set([...notes.base.slice(0,4),...notes.mid.slice(0,3),...notes.top.slice(0,3),...notes.flat.slice(0,8)])];
+  if(!fam&&uniq.length){const count={};uniq.forEach(n=>NOTE_FAM.forEach(([re,f])=>{if(new RegExp(re).test(n))count[f]=(count[f]||0)+1}));
+    fam=Object.keys(count).sort((a,b)=>count[b]-count[a])[0]||null}
+  const strength=!fam?"medium":["amber","leather","gourmand"].includes(fam)?"heavy":["citrus","fresh"].includes(fam)?"light":"medium";
+  return {fam,notes:uniq,accords,strength};
+}
+function updateFragLink(){
+  const q=($("#fName").value+" "+$("#fBrand").value).trim();
+  $("#fragLink").href=q?"https://www.google.com/search?q="+encodeURIComponent("site:fragrantica.com/perfume "+q):"https://www.fragrantica.com";
+}
+$("#fName").addEventListener("input",updateFragLink);$("#fBrand").addEventListener("input",updateFragLink);
+$("#parseBtn").addEventListener("click",()=>{
+  const r=parseFrag($("#fPaste").value);
+  if(!r.notes.length&&!r.fam){$("#parseMsg").textContent="Couldn't find accords or notes in that text. Copy from \"main accords\" down to the base notes and try again.";return}
+  if(r.fam)$("#fFam").value=r.fam;
+  if(r.notes.length)$("#fNotes").value=r.notes.join(", ");
+  intensity=r.strength;$("#fInt").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===intensity));
+  $("#parseMsg").textContent="Found "+r.notes.length+" notes"+(r.fam?", family "+FAM[r.fam].label.toLowerCase():"")+". Strength is a guess, so adjust it if needed, then add to shelf.";
+});
+
+$("#apiKey").value=getKey()?"••••••••"+getKey().slice(-4):"";
+$("#saveKey").addEventListener("click",()=>{
+  const v=$("#apiKey").value.trim();if(v.startsWith("••"))return;
+  try{v?localStorage.setItem(KEY,v):localStorage.removeItem(KEY)}catch(e){}
+  sample=v?callClaude:null;$("#apiKey").value=v?"••••••••"+v.slice(-4):"";
+  $("#saveKey").textContent=v?"Key saved":"Key removed";setTimeout(()=>$("#saveKey").textContent="Save key",1500);renderAll();
+});
+$("#exportBtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify({version:1,items:shelf},null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="layer-shelf-"+new Date().toISOString().slice(0,10)+".json";a.click();
+});
+$("#importBtn").addEventListener("click",()=>$("#importFile").click());
+$("#importFile").addEventListener("change",async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{const d=JSON.parse(await f.text());const items=(d.items||[]).filter(p=>p&&p.name&&FAM[p.fam]);
+    const seen=new Set(shelf.map(p=>p.id));items.forEach(p=>{if(!seen.has(p.id))shelf.push(p)});save();renderAll();
+    $("#importBtn").textContent="Imported "+items.length;}catch(err){$("#importBtn").textContent="Not a valid backup";}
+  setTimeout(()=>$("#importBtn").textContent="Import backup",2000);e.target.value="";
+});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+renderAll();
+</script>
+</body>
+</html>
