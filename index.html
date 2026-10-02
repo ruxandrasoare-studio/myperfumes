@@ -156,6 +156,8 @@ summary{cursor:pointer;padding:12px 0;font-weight:600}
   <section id="ideas" hidden>
     <h2>Best pairs on your shelf</h2>
     <p class="hint">Ranked by family harmony, shared notes and weight contrast. Tap one to see how to wear it.</p>
+    <div class="seg" id="minScore" style="margin-bottom:8px"><button type="button" data-v="80" aria-pressed="true">80+</button><button type="button" data-v="60" aria-pressed="false">60+</button><button type="button" data-v="0" aria-pressed="false">All</button></div>
+    <p class="note" id="pairCount" style="margin:0 0 4px"></p>
     <div id="topPairs"></div>
     <div id="aiIdeas" style="margin-top:32px">
       <h2>Layer for a moment</h2>
@@ -408,6 +410,19 @@ const CATALOG=[
  ["No. 10 Linde Berlin","Frau Tonis","floral","linden blossom, honey, linden leaves","medium"],
  ["No. 11 Si tu Savais","Frau Tonis","citrus","green apple, hyacinth, lemon, musk, cedar","light"],
  ["No. 41 Orange","Frau Tonis","citrus","orange","light"],
+ ["Amalfi Sunray","Zara","citrus","bergamot, mandarin, orange blossom","light"],
+ ["Bohemian Bluebells","Zara","aromatic","lavender, sandalwood, musk","light"],
+ ["Fleur de Patchouli","Zara","woody","peony, patchouli, guaiac wood","medium"],
+ ["Fleur d'Oranger","Zara","floral","orange blossom, neroli, ylang-ylang","medium"],
+ ["Tubéreuse Noir","Zara","floral","ylang-ylang, tuberose, sandalwood","medium"],
+ ["Waterlily Tea Dress","Zara","fresh","bergamot, mint, musk","light"],
+ ["Brûlante Violette","Zara","floral","magnolia, rosebuds, violet leaf, cedar, moss, white musk","light"],
+ ["Energetically New York","Zara","woody","cardamom, jasmine, sandalwood, ambrette, musk","medium"],
+ ["Femme","Zara","floral","bergamot, orchid, peony, vanilla, sandalwood, musk","medium"],
+ ["Orchid","Zara","floral","bergamot, orchid, vanilla","light"],
+ ["Twilight Mauve","Zara","fruity","apple, watermelon, violet, passionfruit, peony, freesia, honeysuckle, iris, musk, cedar, ambergris","medium"],
+ ["01 Red Vanilla","Zara","fruity","raspberry, tangerine, red peony, iris, vanilla","medium"],
+ ["Peony","Zara","floral","pear, blackcurrant, peony, rose, gardenia, iris, black vanilla, tonka, woods, praline","medium"],
  ["Osmanthus","To Summer","floral","peach, bitter orange, osmanthus, jasmine tea, rose, amber, white musk","light"],
  ["Cedarwood (Kunlun Snow)","To Summer","woody","bergamot, juniper, cypress, rose, cedar, amber, guaiac wood","medium"],
  ["Ink (Black Pine Ink)","To Summer","woody","iris, coconut, bergamot, cedar, juniper, sandalwood, tonka, musk, amber","medium"],
@@ -515,13 +530,16 @@ function renderPair(){
    ${sample?`<p style="margin-top:18px"><button class="btn ghost" id="pairAi" type="button">Get a perfumer's take from Claude</button></p><div class="ai" id="pairOut" aria-live="polite"></div>`:""}
    </div></div>`;
 }
+let minScore=80;
 function renderIdeas(){
   const el=$("#topPairs");
   if(shelf.length<2){el.innerHTML=`<div class="empty">Add at least two perfumes to see ranked pairs.</div>`}
   else{
     const pairs=[];for(let i=0;i<shelf.length;i++)for(let j=i+1;j<shelf.length;j++)pairs.push(scorePair(shelf[i],shelf[j]));
     pairs.sort((p,q)=>q.s-p.s);
-    el.innerHTML=pairs.slice(0,6).map(p=>`<button class="pair" type="button" data-a="${p.base.id}" data-b="${p.top.id}">
+    const shown=pairs.filter(p=>p.s>=minScore);
+    $("#pairCount").textContent=shown.length?`${shown.length} combination${shown.length>1?"s":""} scoring ${minScore?minScore+" or more":"anything"} out of ${pairs.length} possible.`:`No pairs score ${minScore}+ yet. Showing your best ${Math.min(5,pairs.length)} instead; adding a musk or a light citrus usually creates high scorers.`;
+    el.innerHTML=(shown.length?shown:pairs.slice(0,5)).map(p=>`<button class="pair" type="button" data-a="${p.base.id}" data-b="${p.top.id}">
       <span class="swatches"><span class="dot" style="background:${FAM[p.base.fam].c}"></span><span class="dot" style="background:${FAM[p.top.fam].c}"></span></span>
       <span class="p"><strong>${esc(p.base.name)} + ${esc(p.top.name)}</strong><span>${p.verdict}</span></span><span class="s">${p.s}</span></button>`).join("");
   }
@@ -565,6 +583,8 @@ $("#catSearch").addEventListener("input",renderCatalog);
 $("#catalog").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=CATALOG[+b.dataset.cat];
   shelf.unshift({id:uid(),name:c[0],brand:c[1],fam:c[2],notes:c[3].split(", "),intensity:c[4]});save();renderAll();});
 $("#shelfList").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;shelf=shelf.filter(p=>p.id!==b.dataset.del);save();renderAll();});
+$("#minScore").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;minScore=+b.dataset.v;
+  $("#minScore").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderIdeas();});
 $("#pA").addEventListener("change",renderPair);$("#pB").addEventListener("change",renderPair);
 $("#topPairs").addEventListener("click",e=>{const b=e.target.closest(".pair");if(!b)return;$("#pA").value=b.dataset.a;$("#pB").value=b.dataset.b;renderPair();show("layer");});
 $("#result").addEventListener("click",e=>{
