@@ -103,31 +103,11 @@ summary{cursor:pointer;padding:12px 0;font-weight:600}
   </nav>
 
   <section id="shelf">
-    <details id="quick">
-      <summary>Add from popular perfumes</summary>
-      <p class="note" style="margin:6px 0 10px">Type a brand (e.g. Zara, Chanel) or a name. Missing yours? Use "Add your own" with Fragrantica.</p>
+    <details id="quick" open>
+      <summary>Add perfumes</summary>
+      <p class="note" style="margin:6px 0 10px">Type a brand (e.g. Zara, Chanel) or a name.</p>
       <input type="text" id="catSearch" placeholder="Search by name or brand" aria-label="Search popular perfumes">
       <div class="catalog" id="catalog"></div>
-    </details>
-    <details id="custom">
-      <summary>Add your own (with Fragrantica)</summary>
-      <div class="row">
-        <div class="field"><label for="fName">Name</label><input type="text" id="fName" placeholder="Santal 33"></div>
-        <div class="field"><label for="fBrand">Brand</label><input type="text" id="fBrand" placeholder="Le Labo"></div>
-      </div>
-      <div class="import">
-        <p class="note" style="margin:0 0 10px">On the Fragrantica page, select from "main accords" down to the base notes, copy, and paste it below.</p>
-        <p style="margin:0 0 12px"><a class="btn ghost" id="fragLink" href="https://www.fragrantica.com" target="_blank" rel="noopener">Find on Fragrantica</a></p>
-        <div class="field"><label for="fPaste">Pasted Fragrantica text</label><textarea id="fPaste" placeholder="main accords&#10;woody&#10;aromatic&#10;…&#10;Top Notes&#10;Cardamom, Violet&#10;Middle Notes …"></textarea></div>
-        <p style="margin:0 0 6px"><button class="btn ghost" id="parseBtn" type="button">Fill in from pasted text</button></p>
-        <p class="note" id="parseMsg" aria-live="polite" style="margin:0 0 18px"></p>
-      </div>
-      <div class="field"><label for="fFam">Main family</label><select id="fFam"></select></div>
-      <div class="field"><label for="fNotes">Key notes, separated by commas</label><input type="text" id="fNotes" placeholder="sandalwood, cardamom, iris"></div>
-      <div class="field"><label>Strength</label>
-        <div class="seg" id="fInt"><button type="button" data-v="light" aria-pressed="false">Light</button><button type="button" data-v="medium" aria-pressed="true">Medium</button><button type="button" data-v="heavy" aria-pressed="false">Heavy</button></div>
-      </div>
-      <p><button class="btn" id="addBtn" type="button">Add to shelf</button></p>
     </details>
     <ul class="list" id="shelfList"></ul>
     <details id="settings" style="margin-top:28px">
@@ -423,6 +403,19 @@ const CATALOG=[
  ["Twilight Mauve","Zara","fruity","apple, watermelon, violet, passionfruit, peony, freesia, honeysuckle, iris, musk, cedar, ambergris","medium"],
  ["01 Red Vanilla","Zara","fruity","raspberry, tangerine, red peony, iris, vanilla","medium"],
  ["Peony","Zara","floral","pear, blackcurrant, peony, rose, gardenia, iris, black vanilla, tonka, woods, praline","medium"],
+ ["Unusual Flower","Zara","floral","bergamot, mandarin, orchid, verbena, musk","medium"],
+ ["Nude Bouquet","Zara","floral","cherry, jasmine, peony, sandalwood, vanilla","medium"],
+ ["Black Peony","Zara","floral","apricot, bergamot, peony, freesia, vanilla","medium"],
+ ["Pink Flambé","Zara","gourmand","rose, jasmine, orchid, vanilla, woods, amber","medium"],
+ ["Lightly Bloom","Zara","floral","peony, lotus, musk","light"],
+ ["Gracefully Madrid","Zara","citrus","orange, geranium, musk","light"],
+ ["Fields at Nightfall","Zara","amber","praline, jasmine, sandalwood, amber","heavy"],
+ ["02 Black Amber","Zara","amber","mandarin, cherry, passionfruit, tiare flower, hyacinth, amber, vanilla, white musk","medium"],
+ ["Violet Blossom","Zara","floral","cherry blossom, apple, magnolia, heliotrope, almond, vanilla","light"],
+ ["Violet Blossom Candy","Zara","gourmand","magnolia, almond, meringue","medium"],
+ ["Powdery Magnolia","Zara","floral","tarragon, lychee, bergamot, rose, magnolia, cedar, amber, musk","medium"],
+ ["Magnificent Black","Zara","leather","violet, mineral notes, jasmine, leather, amber, patchouli, cedar, vetiver","medium"],
+ ["Rich Warm Addictive","Zara","gourmand","tobacco, coconut, honey, rum, vanilla, sandalwood, cedar","medium"],
  ["Osmanthus","To Summer","floral","peach, bitter orange, osmanthus, jasmine tea, rose, amber, white musk","light"],
  ["Cedarwood (Kunlun Snow)","To Summer","woody","bergamot, juniper, cypress, rose, cedar, amber, guaiac wood","medium"],
  ["Ink (Black Pine Ink)","To Summer","woody","iris, coconut, bergamot, cedar, juniper, sandalwood, tonka, musk, amber","medium"],
@@ -510,7 +503,7 @@ function renderCatalog(){
   const q=$("#catSearch").value.trim().toLowerCase();
   const have=new Set(shelf.map(p=>(p.name+p.brand).toLowerCase()));
   const rows=CATALOG.filter(c=>!have.has((c[0]+c[1]).toLowerCase())&&(!q||(c[0]+" "+c[1]).toLowerCase().includes(q)));
-  $("#catalog").innerHTML=rows.length?rows.map((c,i)=>`<button class="cat" type="button" data-cat="${CATALOG.indexOf(c)}"><span class="dot" style="background:${FAM[c[2]].c}"></span><span class="n">${esc(c[0])} <span style="color:var(--muted)">${esc(c[1])}</span></span><span class="add">Add</span></button>`).join(""):`<p class="note">No match. Use "Add your own" below.</p>`;
+  $("#catalog").innerHTML=rows.length?rows.map((c,i)=>`<button class="cat" type="button" data-cat="${CATALOG.indexOf(c)}"><span class="dot" style="background:${FAM[c[2]].c}"></span><span class="n">${esc(c[0])} <span style="color:var(--muted)">${esc(c[1])}</span></span><span class="add">Add</span></button>`).join(""):`<p class="note">Not in the catalog yet.</p>`;
 }
 function renderPair(){
   const r=$("#result");
@@ -570,15 +563,6 @@ async function ask(prompt,out,btn){
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
 function show(t){document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
   ["shelf","layer","ideas"].forEach(id=>$("#"+id).hidden=id!==t);window.scrollTo({top:0});}
-$("#fFam").innerHTML=Object.entries(FAM).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
-let intensity="medium";
-$("#fInt").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;intensity=b.dataset.v;
-  $("#fInt").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
-$("#addBtn").addEventListener("click",()=>{
-  const name=$("#fName").value.trim();if(!name){$("#fName").focus();return}
-  shelf.unshift({id:uid(),name,brand:$("#fBrand").value.trim(),fam:$("#fFam").value,notes:$("#fNotes").value.split(",").map(s=>s.trim()).filter(Boolean),intensity});
-  $("#fName").value=$("#fBrand").value=$("#fNotes").value="";save();renderAll();
-});
 $("#catSearch").addEventListener("input",renderCatalog);
 $("#catalog").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=CATALOG[+b.dataset.cat];
   shelf.unshift({id:uid(),name:c[0],brand:c[1],fam:c[2],notes:c[3].split(", "),intensity:c[4]});save();renderAll();});
@@ -605,59 +589,7 @@ ${shelf.map(desc).join("\n")}
 For each combination: the two fragrance names (a third only if clearly justified), which goes on first and how many sprays of each, and one sentence on why it fits the occasion. If the shelf can't cover the mood well, say what kind of fragrance is missing.
 Plain text, no markdown or asterisks, under 180 words.`,$("#ideasOut"),$("#ideasBtn"));
 });
-/* ---------- Fragrantica paste import ---------- */
-const ACCORD=[
- ["fresh spicy","spicy"],["warm spicy","spicy"],["soft spicy","spicy"],["white floral","floral"],["yellow floral","floral"],
- ["citrus","citrus"],["aquatic","fresh"],["marine","fresh"],["ozonic","fresh"],["salty","fresh"],["mineral","fresh"],["fresh","fresh"],
- ["aromatic","aromatic"],["lavender","aromatic"],["herbal","aromatic"],["green","green"],["fruity","fruity"],["tropical","fruity"],
- ["rose","floral"],["floral","floral"],["tuberose","floral"],["violet","floral"],["iris","floral"],["powdery","musky"],["musky","musky"],["animalic","musky"],
- ["vanilla","gourmand"],["sweet","gourmand"],["caramel","gourmand"],["chocolate","gourmand"],["coffee","gourmand"],["honey","gourmand"],["almond","gourmand"],["nutty","gourmand"],["lactonic","gourmand"],["coconut","gourmand"],
- ["woody","woody"],["earthy","woody"],["patchouli","woody"],["mossy","woody"],["amber","amber"],["balsamic","amber"],["oud","leather"],["leather","leather"],["smoky","leather"],["tobacco","spicy"],["spicy","spicy"]
-];
-const NOTE_FAM=[["bergamot|lemon|orange|grapefruit|mandarin|lime|neroli|yuzu","citrus"],["sea|marine|aquatic|ozon|salt","fresh"],
- ["lavender|sage|rosemary|basil|mint|thyme","aromatic"],["fig leaf|galbanum|grass|tea|leaf","green"],["pear|apple|peach|berry|cherry|plum|lychee|pineapple","fruity"],
- ["rose|jasmine|tuberose|iris|violet|freesia|peony|lily|orchid|magnolia|ylang","floral"],["vanilla|caramel|praline|chocolate|coffee|sugar|tonka|honey|almond","gourmand"],
- ["sandalwood|cedar|vetiver|patchouli|oak|wood|guaiac","woody"],["amber|labdanum|benzoin|myrrh|frankincense|incense|resin","amber"],
- ["pepper|cardamom|saffron|cinnamon|clove|nutmeg|ginger|tobacco","spicy"],["musk|ambrette|ambroxan|iso e super","musky"],["leather|oud|smoke|birch","leather"]];
-const STOP=/^(perfume rating|rating|longevity|sillage|gender|price value|when to wear|reviews?|votes?|pros|cons|images|news|add your|i have it|i had it|i want it|signature|similar|reminds me of|this perfume reminds|perfumers?|nose|the noses?|launched|.* was launched)/i;
-function parseFrag(txt){
-  const desc=txt.match(/is an? ([a-z ]{3,40}?) fragrance/i);
-  txt=txt.replace(/\r/g,"").replace(/\b(top|middle|heart|base) notes? (?:are|is)\s*/gi,"\n$1 notes\n").replace(/;|\.\s+(?=[A-Z])/g,"\n");
-  const lines=txt.split(/\n|•/).map(s=>s.trim()).filter(Boolean);
-  let mode=null;const accords=[];const notes={top:[],mid:[],base:[],flat:[]};
-  const push=s=>s.split(/,|;| and /).map(x=>x.trim().replace(/\.$/,"")).filter(x=>x&&x.length<35&&!/\d/.test(x)).forEach(x=>notes[mode].push(x.toLowerCase()));
-  for(const raw of lines){
-    const l=raw.toLowerCase();
-    if(/main accords?/.test(l)){mode="acc";continue}
-    const m=l.match(/^(top|middle|heart|base|fragrance)\s+notes?\s*:?\s*(.*)$/);
-    if(m){mode=m[1]==="top"?"top":m[1]==="base"?"base":m[1]==="fragrance"?"flat":"mid";if(m[2])push(raw.slice(raw.length-m[2].length));continue}
-    if(/perfume pyramid/.test(l)){mode=null;continue}
-    if(STOP.test(l)){mode=null;continue}
-    if(mode==="acc"){if(l.length<25&&!/\d/.test(l))accords.push(l);continue}
-    if(mode)push(raw);
-  }
-  if(desc&&!accords.length)accords.push(...desc[1].toLowerCase().split(" "));
-  let fam=null;
-  for(const a of accords){for(const [k,f] of ACCORD)if(a.includes(k)){fam=f;break}if(fam)break}
-  const uniq=[...new Set([...notes.base.slice(0,4),...notes.mid.slice(0,3),...notes.top.slice(0,3),...notes.flat.slice(0,8)])];
-  if(!fam&&uniq.length){const count={};uniq.forEach(n=>NOTE_FAM.forEach(([re,f])=>{if(new RegExp(re).test(n))count[f]=(count[f]||0)+1}));
-    fam=Object.keys(count).sort((a,b)=>count[b]-count[a])[0]||null}
-  const strength=!fam?"medium":["amber","leather","gourmand"].includes(fam)?"heavy":["citrus","fresh"].includes(fam)?"light":"medium";
-  return {fam,notes:uniq,accords,strength};
-}
-function updateFragLink(){
-  const q=($("#fName").value+" "+$("#fBrand").value).trim();
-  $("#fragLink").href=q?"https://www.google.com/search?q="+encodeURIComponent("site:fragrantica.com/perfume "+q):"https://www.fragrantica.com";
-}
-$("#fName").addEventListener("input",updateFragLink);$("#fBrand").addEventListener("input",updateFragLink);
-$("#parseBtn").addEventListener("click",()=>{
-  const r=parseFrag($("#fPaste").value);
-  if(!r.notes.length&&!r.fam){$("#parseMsg").textContent="Couldn't find accords or notes in that text. Copy from \"main accords\" down to the base notes and try again.";return}
-  if(r.fam)$("#fFam").value=r.fam;
-  if(r.notes.length)$("#fNotes").value=r.notes.join(", ");
-  intensity=r.strength;$("#fInt").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===intensity));
-  $("#parseMsg").textContent="Found "+r.notes.length+" notes"+(r.fam?", family "+FAM[r.fam].label.toLowerCase():"")+". Strength is a guess, so adjust it if needed, then add to shelf.";
-});
+
 
 $("#apiKey").value=getKey()?"••••••••"+getKey().slice(-4):"";
 $("#saveKey").addEventListener("click",()=>{
