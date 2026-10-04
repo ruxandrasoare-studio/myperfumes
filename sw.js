@@ -1,5 +1,5 @@
 // Bump VERSION whenever you change index.html so phones pick up the update.
-const VERSION = "layer-v13";
+const VERSION = "layer-v14";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
